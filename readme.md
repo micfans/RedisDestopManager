@@ -8,3 +8,5 @@ General Description
 -------------------
 
 A Redis desktop manage tool based on Java and Jedis(https://github.com/xetorthio/jedis) libray.
+
+The UI design based on NetBeans8's GUI form disigner, so the sources include .form files.
