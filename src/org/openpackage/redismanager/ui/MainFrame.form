@@ -194,8 +194,8 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Connection">
-                        <Property name="tabTitle" type="java.lang.String" value="Connection"/>
+                      <JTabbedPaneConstraints tabName="Connection (Double click to open)">
+                        <Property name="tabTitle" type="java.lang.String" value="Connection (Double click to open)"/>
                       </JTabbedPaneConstraints>
                     </Constraint>
                   </Constraints>
@@ -305,6 +305,13 @@
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
                         <Component class="javax.swing.JTextPane" name="introTextPane">
+                          <Properties>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                                <EmptyBorder bottom="5" left="5" right="5" top="5"/>
+                              </Border>
+                            </Property>
+                          </Properties>
                         </Component>
                       </SubComponents>
                     </Container>

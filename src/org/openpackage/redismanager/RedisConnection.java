@@ -5,7 +5,6 @@
  */
 package org.openpackage.redismanager;
 
-import java.util.Collection;
 import java.util.Set;
 import redis.clients.jedis.Jedis;
 
@@ -64,7 +63,24 @@ public class RedisConnection {
     }
 
     public Object get(String key) {
-        return jedis.get(key);
+        switch (getKeyType(key)) {
+            case "string":
+                return jedis.get(key);
+            case "list":
+                return jedis.lrange(key, 0, -1);
+            case "set":
+                return jedis.smembers(key);
+            case "zset":
+                return jedis.zrange(key, 0, -1);
+            case "hash":
+                return jedis.hgetAll(key);
+
+        }
+        return null;
+    }
+
+    public long getKeyTTL(String key) {
+        return jedis.ttl(key);
     }
 
     public long getDbs() {
@@ -81,6 +97,14 @@ public class RedisConnection {
 
     public Set<String> getKeys(String filter) {
         return jedis.keys(filter);
+    }
+
+    boolean delete(String name) {
+        return jedis.del(name) > 0;
+    }
+
+    String getKeyType(String key) {
+        return jedis.type(key);
     }
 
 }

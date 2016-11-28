@@ -39,6 +39,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void initTree() {
         TreeModel model = controller.loadConnections();
         connectionTree.setModel(model);
+        connectionTree.setCellRenderer(new ConnectionTreeCellRender());
     }
 
     private void initIntroduction() {
@@ -167,7 +168,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         });
         jScrollPane2.setViewportView(connectionTree);
 
-        jTabbedPane3.addTab("Connection", jScrollPane2);
+        jTabbedPane3.addTab("Connection (Double click to open)", jScrollPane2);
 
         jPanel6.add(jTabbedPane3, java.awt.BorderLayout.CENTER);
 
@@ -192,6 +193,8 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         keySplitPane.setRightComponent(logTabbedPane);
 
         jScrollPane1.setBorder(null);
+
+        introTextPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
         jScrollPane1.setViewportView(introTextPane);
 
         dataTabbedPane.addTab("Introduction", jScrollPane1);
@@ -227,11 +230,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        NewDialog newDialog = new NewDialog(this, true, controller);
+        NewConfigDialog newDialog = new NewConfigDialog(this, true, controller);
         newDialog.setLocationRelativeTo(this);
         newDialog.setResizable(false);
         newDialog.setVisible(true);
-        newDialog.pack();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void connectionTreeComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_connectionTreeComponentAdded
@@ -243,34 +245,32 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_connectionTreeValueChanged
 
     private void connectionTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_connectionTreeMouseClicked
+        TreePath path = connectionTree.getClosestPathForLocation(evt.getX(), evt.getY());
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
+        Object userObject = node.getUserObject();
         if (evt.getClickCount() > 1) {
-            TreePath path = connectionTree.getClosestPathForLocation(evt.getX(), evt.getY());
-            if (path != null) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) (path.getLastPathComponent());
-                Object userObject = node.getUserObject();
-                if (userObject instanceof RedisConnection && node.isLeaf()) {
-                    controller.renderDbs(node);
-                } else if (userObject instanceof RedisDb && node.isLeaf()) {
-                    controller.renderKeys(node);
-                } else if (userObject instanceof RedisKeys) {
-                    RedisKeys rks = (RedisKeys) userObject;
-                    DataPanel dp = findDataPanel(rks);
-                    if (dp == null) {
-                        dp = new DataPanel(rks);
-                        dataTabbedPane.add(rks.getRd().getFullTitle(), dp);
-                    }
-                    dataTabbedPane.setSelectedComponent(dp);
+            if (userObject instanceof RedisConnection && node.isLeaf()) {
+                controller.renderDbs(node);
+            } else if (userObject instanceof RedisDb && node.isLeaf()) {
+                controller.renderKeys(node);
+            } else if (userObject instanceof RedisKeys) {
+                RedisKeys rks = (RedisKeys) userObject;
+                KeysPanel dp = findDataPanel(rks);
+                if (dp == null) {
+                    dp = new KeysPanel(rks);
+                    dataTabbedPane.add(rks.getRd().getFullTitle(), dp);
                 }
-                connectionTree.expandPath(path);
+                dataTabbedPane.setSelectedComponent(dp);
             }
+            connectionTree.expandPath(path);
         }
     }//GEN-LAST:event_connectionTreeMouseClicked
 
-    private DataPanel findDataPanel(RedisKeys rks) {
+    private KeysPanel findDataPanel(RedisKeys rks) {
         Component[] comps = dataTabbedPane.getComponents();
         for (Component comp : comps) {
-            if (comp instanceof DataPanel) {
-                DataPanel dp = (DataPanel) comp;
+            if (comp instanceof KeysPanel) {
+                KeysPanel dp = (KeysPanel) comp;
                 if (dp.getRedisKeys().equals(rks)) {
                     return dp;
                 }

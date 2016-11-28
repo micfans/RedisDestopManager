@@ -6,6 +6,7 @@
 package org.openpackage.redismanager;
 
 import java.util.Collection;
+import java.util.Observable;
 
 /**
  *
@@ -26,12 +27,12 @@ public class RedisDb {
         this.index = index;
         this.rc = rc;
     }
-    
-    public String getTitle(){
-        return "db " + index;
+
+    public String getTitle() {
+        return "db" + index;
     }
-    
-    public String getFullTitle(){
+
+    public String getFullTitle() {
         return rc.config().name + ":" + getTitle();
     }
 
@@ -45,7 +46,8 @@ public class RedisDb {
 
     public long getKeySize() {
         if (connect()) {
-            return rc.getKeySize();
+            long c = rc.getKeySize();
+            return c;
         }
         return -1;
     }
@@ -54,12 +56,24 @@ public class RedisDb {
         return getKeys("*");
     }
 
+    public String getKeyType(String key) {
+        return rc.getKeyType(key);
+    }
+
     Object getKeyValue(String key) {
         return rc.get(key);
     }
 
     Collection<String> getKeys(String filter) {
         return rc.getKeys(filter);
+    }
+
+    boolean delete(String name) {
+        return rc.delete(name);
+    }
+
+    RedisConnection getRc() {
+        return rc;
     }
 
 }

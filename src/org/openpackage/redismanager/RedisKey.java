@@ -21,6 +21,8 @@ public class RedisKey {
     private final RedisKeys rks;
     private String key;
     private Object value;
+    private String type;
+    private long ttl;
     private long valueSize;
 
     @Override
@@ -32,6 +34,8 @@ public class RedisKey {
         this.valueSize = -1;
         this.key = key;
         this.rks = rks;
+        this.type = rks.getRd().getKeyType(key);
+        this.ttl = rks.getRd().getRc().getKeyTTL(key);
     }
 
     public void renameKey(String newKey) {
@@ -68,6 +72,14 @@ public class RedisKey {
                 return value == null ? "" : value.toString();
         }
         throw new IllegalArgumentException("Unknown value type for " + valueType);
+    }
+
+    public String getType() {
+        return type;
+    }
+    
+    public long getTTL(){
+        return ttl;
     }
 
 }

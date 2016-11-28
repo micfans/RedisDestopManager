@@ -11,7 +11,7 @@ import org.openpackage.redismanager.RedisConfig;
  *
  * @author micfans
  */
-public class NewDialog extends javax.swing.JDialog {
+public class NewConfigDialog extends javax.swing.JDialog {
 
     private final MainController controller;
 
@@ -22,7 +22,7 @@ public class NewDialog extends javax.swing.JDialog {
      * @param modal
      * @param controller
      */
-    public NewDialog(java.awt.Frame parent, boolean modal, MainController controller) {
+    public NewConfigDialog(java.awt.Frame parent, boolean modal, MainController controller) {
         super(parent, modal);
         this.controller = controller;
         initComponents();
